@@ -61,6 +61,7 @@ def main():
       print("11 - Retornar a árvore geradora mínima")
       print("12 - Retornar a cobertura mínima do grafo")
       print("13 - Retornar a centralidade de proximidade de um vértice")
+      print("14 - Retornar emparelhamento máximo do grafo")
       print("0 - Sair\n")
 
       opcao = int(input("Digite a opção desejada: "))
@@ -158,7 +159,13 @@ def main():
                 else:
                     print(f"Centralidade de proximidade do vertice {vertice} é: {resultados}")
 
-              
+            case 14:
+                pares, peso = encontra_emparelhamento_maximo(grafo)
+                if pares is not None:  # Se encontrou um emparelhamento
+                    print("\nEmparelhamento Máximo encontrado:")
+                    print(pares)
+                    print(f"Tamanho do emparelhamento: {len(pares)}")
+                    print(f"Peso total do emparelhamento: {peso}\n") 
             case _:
                 print("Opção inválida. Tente novamente.")
               

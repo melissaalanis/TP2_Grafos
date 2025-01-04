@@ -311,3 +311,118 @@ def cobertura_minima(grafo): # Heurística de Greedy
     
     return len(cobertura), cobertura
 
+def encontra_emparelhamento_maximo(grafo):
+    if not grafo or len(grafo) <= 1:
+        print("Erro: Grafo vazio ou inválido.")
+        return None, 0
+        
+    n = len(grafo) - 1  # Ajuste para o índice 0
+    
+    # Verifica se existe alguma aresta no grafo
+    tem_arestas = False
+    for i in range(1, n + 1):
+        for j in range(1, n + 1):
+            if grafo[i][j] > 0:
+                tem_arestas = True
+                break
+        if tem_arestas:
+            break
+            
+    if not tem_arestas:
+        print("Não existe emparelhamento possível: grafo não possui arestas.")
+        return None, 0
+    
+    # Vetor de emparelhamento: emparelhamento[v] contém o vértice com qual v está emparelhado
+    # 0 significa que o vértice não está emparelhado
+    emparelhamento = [0] * (n + 1)
+    F = set(range(1, n + 1))  # Conjunto de vértices livres
+    
+    #Retorna o par emparelhado de um dado vértice, se existir.
+    def par(v):
+        return emparelhamento[v] if emparelhamento[v] != 0 else None
+    
+    def bfs(raiz):
+        fila = [raiz]
+        
+        arvore = {raiz: None}
+        visitados = {raiz} # Marca o vértice raiz como visitado
+        
+        while fila:
+            v = fila.pop(0) # Remove o primeiro vértice da fila
+            
+            for w in range(1, len(grafo[v])): # Para cada vértice adjacente
+                if grafo[v][w] > 0:  # Se existe aresta entre v e w
+                    if w not in visitados:
+                        if par(w):  # Se w está emparelhado
+                            par_w = par(w) # Obtém o par de w
+                            visitados.add(w) # Adiciona w e seu par aos visitados
+                            visitados.add(par_w) # Adiciona o par de w aos visitados
+                            arvore[w] = v # Atualiza a árvore de busca
+                            arvore[par_w] = w 
+                            fila.append(par_w) # Adiciona o par de w à fila
+                        else:
+                            arvore[w] = v # Retorna o caminho construído
+                            return construir_caminho(w, arvore)
+        return None # Retorna None se nenhum caminho for encontrado
+
+    def construir_caminho(w, arvore):
+        caminho = []
+        
+        while w is not None:
+            # Adiciona o vértice atual à lista de caminho
+            caminho.append(w)
+            # Atualiza w para ser o próximo vértice no caminho, conforme definido na árvore
+            w = arvore[w]
+        
+        # Retorna o caminho na ordem inversa 
+        return caminho[::-1]
+    
+    #Aumenta o emparelhamento de um grafo com base no caminho fornecido
+    #Este método percorre o caminho fornecido e emparelha os vértices adjacentes
+    #Para cada par de vértices consecutivos no caminho, ele adiciona uma aresta entre eles no emparelhamento
+    def aumentar_emparelhamento(caminho):
+        for i in range(0, len(caminho) - 1, 2):
+            v, w = caminho[i], caminho[i + 1]
+            emparelhamento[v] = w
+            emparelhamento[w] = v
+    
+    while F:
+        r = F.pop()  # Remove e retorna um elemento do conjunto F
+        if par(r):  # Verifica se o vértice r já foi emparelhado
+            continue
+            
+        caminho = bfs(r)  # Realiza uma busca em largura a partir do vértice r
+        if caminho:
+            
+            aumentar_emparelhamento(caminho)  # Aumenta o emparelhamento com base no caminho encontrado
+            # Atualiza o conjunto F com todos os vértices que ainda não foram emparelhados
+            F = {v for v in range(1, n + 1) if emparelhamento[v] == 0}
+        else:
+            continue
+    
+    # Calcula o peso total do emparelhamento
+    peso_total = 0
+    pares_contados = set()  # Cria um conjunto para armazenar os pares já contados
+    pares_emparelhamento = []
+    
+    for v in range(1, n + 1):
+        w = emparelhamento[v]  # Obtém o vértice emparelhado com v
+        # Verifica se w não é zero e se o par (v, w) ou (w, v) ainda não foi contado
+        if w != 0 and (v, w) not in pares_contados and (w, v) not in pares_contados:
+            # Sempre coloca o vértice menor primeiro no par
+            par_ordenado = (min(v, w), max(v, w))
+            pares_emparelhamento.append(par_ordenado)
+            peso_total += grafo[v][w]
+            
+            pares_contados.add((v, w))  # Adiciona o par ao conjunto de pares contados
+    
+    # Ordena os pares pelo primeiro vértice
+    pares_emparelhamento.sort()
+    
+    # Verifica se todos os elementos do emparelhamento são zero
+    if all(x == 0 for x in emparelhamento):
+        print("Não foi possível encontrar um emparelhamento válido no grafo.")
+        return None, 0
+        
+    return pares_emparelhamento, peso_total
+
