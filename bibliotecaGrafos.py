@@ -250,7 +250,7 @@ def arvore_geradora_minima(grafo):
         prim_componente(vertice_inicial)
 
     pesototal = 0
-    with open('/home/leticia/Documentos/Grafos/TP2-Grafos/TP2 - Grafos/arvoreGeradoraMinima.txt', 'w') as f:
+    with open('arvoreGeradoraMinima.txt', 'w') as f:
       f.write(f"{len(arestasArvore)}\n") # Escreve a quantidade de arestas
       for aresta in arestasArvore:
         pesototal += grafo[aresta[0]][aresta[1]] # Soma os pesos das arestas
