@@ -160,12 +160,12 @@ def main():
                     print(f"Centralidade de proximidade do vertice {vertice} é: {resultados}")
 
             case 14:
-                pares, peso = encontra_emparelhamento_maximo(grafo)
+                pares = encontra_emparelhamento_maximo(grafo)
                 if pares is not None:  # Se encontrou um emparelhamento
                     print("\nEmparelhamento Máximo encontrado:")
+                    print("Arestas: ", end="")
                     print(pares)
                     print(f"Tamanho do emparelhamento: {len(pares)}")
-                    print(f"Peso total do emparelhamento: {peso}\n") 
             case _:
                 print("Opção inválida. Tente novamente.")
               

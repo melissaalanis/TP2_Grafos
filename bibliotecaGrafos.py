@@ -400,8 +400,7 @@ def encontra_emparelhamento_maximo(grafo):
         else:
             continue
     
-    # Calcula o peso total do emparelhamento
-    peso_total = 0
+  
     pares_contados = set()  # Cria um conjunto para armazenar os pares já contados
     pares_emparelhamento = []
     
@@ -412,8 +411,6 @@ def encontra_emparelhamento_maximo(grafo):
             # Sempre coloca o vértice menor primeiro no par
             par_ordenado = (min(v, w), max(v, w))
             pares_emparelhamento.append(par_ordenado)
-            peso_total += grafo[v][w]
-            
             pares_contados.add((v, w))  # Adiciona o par ao conjunto de pares contados
     
     # Ordena os pares pelo primeiro vértice
@@ -424,5 +421,5 @@ def encontra_emparelhamento_maximo(grafo):
         print("Não foi possível encontrar um emparelhamento válido no grafo.")
         return None, 0
         
-    return pares_emparelhamento, peso_total
+    return pares_emparelhamento
 
